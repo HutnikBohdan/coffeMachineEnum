@@ -9,12 +9,8 @@ public class startMachine {
     private int cups;
     private int money;
 
-    private boolean fillWater;
-    private boolean fillMilk;
-    private boolean fillCoffeeB;
-    private boolean fillCups;
-
     statMach status;
+    fillMachine fill_machine;
 
 
     public startMachine(int water, int milk, int coffeeBeans, int cups, int money) {
@@ -25,9 +21,14 @@ public class startMachine {
         this.money = money;
         actionMenu();
     }
+
     enum statMach {
         CHOOSING_ACTION, REMAINING, FILL,
         TAKE, EXIT, BUY
+    }
+
+    enum fillMachine {
+        FILL_WATER, FILL_MILK, FILL_COFFEEB, FILL_CUPS
     }
 
 
@@ -71,7 +72,7 @@ public class startMachine {
                 case "fill":
                     System.out.println("Write how many ml of water you want to add:");
                     status = statMach.FILL;
-                    setFill();
+                    fill_machine = fillMachine.FILL_WATER;
                     break;
                 case "take":
                     status = statMach.TAKE;
@@ -120,32 +121,28 @@ public class startMachine {
         return number;
     }
 
-    public void setFill() {
-        this.fillWater = true;
-        this.fillMilk = true;
-        this.fillCoffeeB = true;
-        this.fillCups = true;
-    }
-
     public void fill(String value) {
         if (numOrNot(value)) {
-            if (fillWater) {
-                this.water += Integer.parseInt(value);
-                System.out.println("Write how many ml of milk you want to add: ");
-                fillWater = false;
-            } else if (fillMilk) {
-                this.milk += Integer.parseInt(value);
-                System.out.println("Write how many grams of coffee beans you want ");
-                fillMilk = false;
-            } else if (fillCoffeeB) {
-                this.coffeeBeans += Integer.parseInt(value);
-                System.out.println("Write how many disposable cups you want to add:");
-                fillCoffeeB = false;
-            } else if (fillCups) {
-                this.cups += Integer.parseInt(value);
-                fillCups = false;
-                setFill();
-                actionMenu();
+            switch (fill_machine) {
+                case FILL_WATER:
+                    this.water += Integer.parseInt(value);
+                    System.out.println("Write how many ml of milk you want to add: ");
+                    fill_machine = fillMachine.FILL_MILK;
+                    break;
+                case FILL_MILK:
+                    this.milk += Integer.parseInt(value);
+                    System.out.println("Write how many grams of coffee beans you want ");
+                    fill_machine = fillMachine.FILL_COFFEEB;
+                    break;
+                case FILL_COFFEEB:
+                    this.coffeeBeans += Integer.parseInt(value);
+                    System.out.println("Write how many disposable cups you want to add:");
+                    fill_machine = fillMachine.FILL_CUPS;
+                    break;
+                case FILL_CUPS:
+                    this.cups += Integer.parseInt(value);
+                    actionMenu();
+                    break;
             }
 
         }
